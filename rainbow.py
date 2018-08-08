@@ -13,31 +13,30 @@ centerColor = swicted_off
 rightColor = swicted_off
 
 
-def get_color():
-    colors = [
-        '000000',
-        '0000FF',
-        '00FF00',
-        '00FFFF',
-        'FF0000',
-        'FF00FF',
-        'FFFF00',
-        'FFFFFF'
-    ]
+def get_color(step_count=9):
+    red = [r for r in range(0, 255, 255/(step_count/3)-1)]
+    print(red)
+    green = [g for g in range(0, 255, 255/(step_count/3)-1)]
+    blue = [b for b in range(0, 255, 255/(step_count/3)-1)]
+
     while True:
-        for i in colors:
-            yield i
+        for r in red:
+            for g in green:
+                for b in blue:
+                    yield '{:02X}{:02X}{:02X}'.format(r, g, b)
 
 
-def get_brightness():
+def get_brightness(step_count=16):
     while True:
-        for n in range(0, 255, 16):
+        for n in range(0, 255, 255 / step_count):
+            yield n
+        for n in reversed(range(0, 255, 255 / step_count)):
             yield n
 
 
-brightness_generator = get_brightness()
+brightness_generator = get_brightness(step_count=8)
 
-for i in get_color():
+for i in get_color(step_count=9):
     brightness = brightness_generator.next()
     print('color', i)
     print('brightness', brightness)
@@ -58,7 +57,7 @@ for i in get_color():
     subprocess.check_output(['bash', '-c', rightCommand.format(color=rightColor)])
     subprocess.check_output(['bash', '-c', brightnessCommand.format(brightness=brightness)])
 
-    time.sleep(1)
+    time.sleep(0.1)
 
 
 
