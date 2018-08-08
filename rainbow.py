@@ -13,11 +13,12 @@ centerColor = swicted_off
 rightColor = swicted_off
 
 
-def get_color(step_count=9):
-    red = [r for r in range(0, 255, 255/(step_count/3)-1)]
-    print(red)
-    green = [g for g in range(0, 255, 255/(step_count/3)-1)]
-    blue = [b for b in range(0, 255, 255/(step_count/3)-1)]
+def get_color(step_count=16):
+    step_size = 255/(step_count/3)
+
+    red = [r for r in range(0, 256, step_size)]
+    green = [g for g in range(0, 256, step_size)]
+    blue = [b for b in range(0, 256, step_size)]
 
     while True:
         for r in red:
@@ -26,17 +27,26 @@ def get_color(step_count=9):
                     yield '{:02X}{:02X}{:02X}'.format(r, g, b)
 
 
-def get_brightness(step_count=16):
+def get_brightness(step_count=16, low=8, high=255):
+    real_low = 0
+    real_high = 256
+
+    if low < real_low:
+        low = real_low
+
+    if high > real_high:
+        high = real_high
+
     while True:
-        for n in range(0, 255, 255 / step_count):
+        for n in range(low, high, high / step_count):
             yield n
-        for n in reversed(range(0, 255, 255 / step_count)):
+        for n in reversed(range(low, high, high / step_count)):
             yield n
 
 
-brightness_generator = get_brightness(step_count=8)
+brightness_generator = get_brightness()
 
-for i in get_color(step_count=9):
+for i in get_color():
     brightness = brightness_generator.next()
     print('color', i)
     print('brightness', brightness)
